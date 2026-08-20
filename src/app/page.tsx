@@ -161,7 +161,7 @@ export default function Home() {
         <div className="results-container">
           <div className="left-column">
             <form className="search-form" onSubmit={handleSubmit} style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
+              <div className="form-group" style={{ flex: 1, minWidth: '230px' }}>
                 <label htmlFor="domain">Domain Name</label>
                 <input
                   id="domain"
@@ -174,7 +174,7 @@ export default function Home() {
                 />
               </div>
               
-              <div className="form-group" style={{ minWidth: '150px' }}>
+              <div className="form-group" style={{ width: '90px' }}>
                 <label>Record Type</label>
                 <Dropdown
                   value={recordType}

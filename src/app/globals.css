@@ -325,7 +325,7 @@ select.input-field {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  width: 100%;
+  min-width: 240px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -361,7 +361,9 @@ select.input-field {
   cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   position: relative;
 }
 
@@ -382,8 +384,10 @@ select.input-field {
 .dropdown-item-desc {
   font-size: 0.75rem;
   color: var(--text-muted);
-  margin-left: 0.75rem;
+  margin-left: 0;
+  margin-top: 0.25rem;
   font-weight: 400;
+  padding-right: 1.5rem; /* Space for the checkmark */
 }
 
 .dropdown-check {
@@ -391,6 +395,8 @@ select.input-field {
   height: 16px;
   position: absolute;
   right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--primary);
 }
 
