@@ -165,7 +165,7 @@ select.input-field {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
   width: 100%;
@@ -180,12 +180,14 @@ select.input-field {
 
 @media (min-width: 1024px) {
   .results-container {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.5fr;
     align-items: start;
   }
 }
 
 .map-wrapper {
+  position: sticky;
+  top: 2rem;
   height: 600px;
   width: 100%;
   border-radius: 8px;
