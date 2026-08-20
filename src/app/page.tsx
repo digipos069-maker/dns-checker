@@ -1,44 +1,67 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { resolveDns, DnsRecordType, DnsResult } from '@/actions/dns';
 import Dropdown from '@/components/Dropdown';
 
+// Import map dynamically since Leaflet requires window
+const MapComponent = dynamic(() => import('@/components/Map'), { ssr: false });
+
+
 const DNS_SERVERS = [
-  { id: 'us-mv', name: 'Google', location: 'Mountain View CA, United States', ip: '8.8.8.8' },
-  { id: 'us-sf', name: 'OpenDNS', location: 'San Francisco CA, United States', ip: '208.67.222.222' },
-  { id: 'us-berkeley', name: 'Quad9', location: 'Berkeley, US', ip: '9.9.9.9' },
-  { id: 'us-cambridge', name: 'Akamai', location: 'Cambridge, United States', ip: '1.1.1.1' },
-  { id: 'us-ashburn', name: 'Quad9', location: 'Ashburn, United States', ip: '9.9.9.10' },
-  { id: 'us-centurylink', name: 'CenturyLink', location: 'United States', ip: '205.171.3.65' },
-  { id: 'us-wilmington', name: 'NextDNS Inc.', location: 'Wilmington, US', ip: '45.90.28.190' },
-  { id: 'ca-toronto', name: 'Cloudflare', location: 'Toronto, Canada', ip: '1.0.0.1' },
-  { id: 'ru-spb', name: 'PJSC MegaFon', location: 'Saint Petersburg, Russia', ip: '77.88.8.8' },
-  { id: 'za-cullinan', name: 'Liquid Telecom', location: 'Cullinan, South Africa', ip: '8.8.8.8' },
-  { id: 'nl-lelystad', name: 'LeaseWeb', location: 'Lelystad, Netherlands', ip: '1.1.1.1' },
-  { id: 'fr-strasbourg', name: 'Assoc Alsace', location: 'Strasbourg, France', ip: '8.8.4.4' },
-  { id: 'es-parla', name: 'AIRE NETWORKS', location: 'Parla, Spain', ip: '9.9.9.9' },
-  { id: 'ch-zurich', name: 'Swisscom Ltd', location: 'Zürich, Switzerland', ip: '1.1.1.1' },
-  { id: 'at-innsbruck', name: 'nemox.net', location: 'Innsbruck, Austria', ip: '8.8.8.8' },
-  { id: 'gb-newbury', name: 'Vodafone', location: 'Newbury, United Kingdom', ip: '208.67.220.220' },
-  { id: 'dk-copenhagen', name: 'Fiberby ApS', location: 'Copenhagen, Denmark', ip: '1.1.1.1' },
-  { id: 'de-frankfurt', name: 'Ecrcnet', location: 'Frankfurt, Germany', ip: '8.8.8.8' },
-  { id: 'mx-mexicocity', name: 'TOTAL PLAY', location: 'Mexico City, Mexico', ip: '9.9.9.9' },
-  { id: 'br-jacarezinho', name: 'Ligga Telecom', location: 'Jacarezinho, Brazil', ip: '1.1.1.1' },
-  { id: 'my-portdickson', name: 'Bigband Sdn Bhd', location: 'Port Dickson, Malaysia', ip: '8.8.8.8' },
-  { id: 'au-research', name: 'Cloudflare', location: 'Research, Australia', ip: '1.1.1.1' },
-  { id: 'au-brisbane', name: 'Cloudflare', location: 'Brisbane, Australia', ip: '1.0.0.1' },
-  { id: 'nz-auckland', name: 'Voyager Internet', location: 'Auckland, New Zealand', ip: '8.8.8.8' },
-  { id: 'sg-singapore', name: 'DigitalOcean', location: 'Singapore', ip: '1.1.1.1' },
-  { id: 'kr-seoul', name: 'SK Telecom', location: 'Seoul, South Korea', ip: '8.8.4.4' },
-  { id: 'cn-xinfeng', name: 'Nanjing Xinfeng', location: 'Xinfeng, China', ip: '223.5.5.5' },
-  { id: 'tr-istanbul', name: 'Radore Veri Merkezi', location: 'Istanbul, Turkey', ip: '8.8.8.8' },
-  { id: 'in-bengaluru', name: 'BHARAT PUBLIC DNS', location: 'Bengaluru, India', ip: '1.10.10.10' },
-  { id: 'pk-karachi', name: 'Connect Comms', location: 'Karachi, Pakistan', ip: '1.1.1.1' },
-  { id: 'pt-lisbon', name: 'NOS COMUNICACOES', location: 'Lisbon, Portugal', ip: '8.8.8.8' },
-  { id: 'ie-ireland', name: 'Daniel Cid', location: 'Ireland', ip: '9.9.9.9' },
-  { id: 'bd-dhaka', name: 'Dhaka', location: 'Dhaka, Bangladesh', ip: '8.8.4.4' }
+  { id: 'us-mv', name: 'Google', location: 'Mountain View CA, United States', ip: '8.8.8.8', lat: 37.3861, lng: -122.0839 },
+  { id: 'us-sf', name: 'OpenDNS', location: 'San Francisco CA, United States', ip: '208.67.222.222', lat: 37.7749, lng: -122.4194 },
+  { id: 'us-berkeley', name: 'Quad9', location: 'Berkeley, US', ip: '9.9.9.9', lat: 37.8715, lng: -122.2730 },
+  { id: 'us-cambridge', name: 'Akamai', location: 'Cambridge, United States', ip: '1.1.1.1', lat: 42.3736, lng: -71.1097 },
+  { id: 'us-ashburn', name: 'Quad9', location: 'Ashburn, United States', ip: '9.9.9.10', lat: 39.0438, lng: -77.4874 },
+  { id: 'us-centurylink', name: 'CenturyLink', location: 'United States', ip: '205.171.3.65', lat: 39.8283, lng: -98.5795 },
+  { id: 'us-wilmington', name: 'NextDNS Inc.', location: 'Wilmington, US', ip: '45.90.28.190', lat: 39.7447, lng: -75.5484 },
+  { id: 'ca-toronto', name: 'Cloudflare', location: 'Toronto, Canada', ip: '1.0.0.1', lat: 43.6510, lng: -79.3470 },
+  { id: 'ru-spb', name: 'PJSC MegaFon', location: 'Saint Petersburg, Russia', ip: '77.88.8.8', lat: 59.9311, lng: 30.3609 },
+  { id: 'za-cullinan', name: 'Liquid Telecom', location: 'Cullinan, South Africa', ip: '8.8.8.8', lat: -25.6706, lng: 28.5236 },
+  { id: 'nl-lelystad', name: 'LeaseWeb', location: 'Lelystad, Netherlands', ip: '1.1.1.1', lat: 52.5185, lng: 5.4714 },
+  { id: 'fr-strasbourg', name: 'Assoc Alsace', location: 'Strasbourg, France', ip: '8.8.4.4', lat: 48.5734, lng: 7.7521 },
+  { id: 'es-parla', name: 'AIRE NETWORKS', location: 'Parla, Spain', ip: '9.9.9.9', lat: 40.2372, lng: -3.7725 },
+  { id: 'ch-zurich', name: 'Swisscom Ltd', location: 'Zürich, Switzerland', ip: '1.1.1.1', lat: 47.3769, lng: 8.5417 },
+  { id: 'at-innsbruck', name: 'nemox.net', location: 'Innsbruck, Austria', ip: '8.8.8.8', lat: 47.2692, lng: 11.4041 },
+  { id: 'gb-newbury', name: 'Vodafone', location: 'Newbury, United Kingdom', ip: '208.67.220.220', lat: 51.4014, lng: -1.3259 },
+  { id: 'dk-copenhagen', name: 'Fiberby ApS', location: 'Copenhagen, Denmark', ip: '1.1.1.1', lat: 55.6761, lng: 12.5683 },
+  { id: 'de-frankfurt', name: 'Ecrcnet', location: 'Frankfurt, Germany', ip: '8.8.8.8', lat: 50.1109, lng: 8.6821 },
+  { id: 'mx-mexicocity', name: 'TOTAL PLAY', location: 'Mexico City, Mexico', ip: '9.9.9.9', lat: 19.4326, lng: -99.1332 },
+  { id: 'br-jacarezinho', name: 'Ligga Telecom', location: 'Jacarezinho, Brazil', ip: '1.1.1.1', lat: -23.1611, lng: -49.9722 },
+  { id: 'my-portdickson', name: 'Bigband Sdn Bhd', location: 'Port Dickson, Malaysia', ip: '8.8.8.8', lat: 2.5228, lng: 101.7959 },
+  { id: 'au-research', name: 'Cloudflare', location: 'Research, Australia', ip: '1.1.1.1', lat: -37.7667, lng: 145.1833 },
+  { id: 'au-brisbane', name: 'Cloudflare', location: 'Brisbane, Australia', ip: '1.0.0.1', lat: -27.4698, lng: 153.0251 },
+  { id: 'nz-auckland', name: 'Voyager Internet', location: 'Auckland, New Zealand', ip: '8.8.8.8', lat: -36.8485, lng: 174.7633 },
+  { id: 'sg-singapore', name: 'DigitalOcean', location: 'Singapore', ip: '1.1.1.1', lat: 1.3521, lng: 103.8198 },
+  { id: 'kr-seoul', name: 'SK Telecom', location: 'Seoul, South Korea', ip: '8.8.4.4', lat: 37.5665, lng: 126.9780 },
+  { id: 'cn-xinfeng', name: 'Nanjing Xinfeng', location: 'Xinfeng, China', ip: '223.5.5.5', lat: 32.0603, lng: 118.7969 },
+  { id: 'tr-istanbul', name: 'Radore Veri Merkezi', location: 'Istanbul, Turkey', ip: '8.8.8.8', lat: 41.0082, lng: 28.9784 },
+  { id: 'in-bengaluru', name: 'BHARAT PUBLIC DNS', location: 'Bengaluru, India', ip: '1.10.10.10', lat: 12.9716, lng: 77.5946 },
+  { id: 'pk-karachi', name: 'Connect Comms', location: 'Karachi, Pakistan', ip: '1.1.1.1', lat: 24.8607, lng: 67.0011 },
+  { id: 'pt-lisbon', name: 'NOS COMUNICACOES', location: 'Lisbon, Portugal', ip: '8.8.8.8', lat: 38.7223, lng: -9.1393 },
+  { id: 'ie-ireland', name: 'Daniel Cid', location: 'Ireland', ip: '9.9.9.9', lat: 53.1424, lng: -7.6921 },
+  { id: 'bd-dhaka', name: 'Dhaka', location: 'Dhaka, Bangladesh', ip: '8.8.4.4', lat: 23.8103, lng: 90.4125 }
 ];
+
+const getRecordTypeIcon = (type: string) => {
+  switch(type) {
+    case 'A': return 'fi fi-rr-computer';
+    case 'AAAA': return 'fi fi-rr-cloud-network';
+    case 'MX': return 'fi fi-rr-envelope';
+    case 'TXT': return 'fi fi-rr-document';
+    case 'CNAME': return 'fi fi-rr-link';
+    case 'NS': return 'fi fi-rr-server';
+    case 'PTR': return 'fi fi-rr-exchange';
+    case 'SRV': return 'fi fi-rr-settings';
+    case 'SOA': return 'fi fi-rr-badge-check';
+    case 'CAA': return 'fi fi-rr-lock';
+    case 'DS': return 'fi fi-rr-shield';
+    case 'DNSKEY': return 'fi fi-rr-key';
+    default: return 'fi fi-rr-search';
+  }
+};
 
 type ServerResult = {
   status: 'pending' | 'success' | 'error';
@@ -51,6 +74,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [serverResults, setServerResults] = useState<Record<string, ServerResult>>({});
   const [hasSearched, setHasSearched] = useState(false);
+  const [selectedServerId, setSelectedServerId] = useState<string | null>(null);
+  const [hoveredServerId, setHoveredServerId] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,64 +199,88 @@ export default function Home() {
           </button>
         </form>
 
-        {hasSearched && (
-          <div className="results-container">
-            <div className="results-table-wrapper">
-              <table className="results-table">
-                <thead>
-                  <tr>
-                    <th>Location / Server</th>
-                    <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
-                    <th>Result Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {DNS_SERVERS.map(server => {
-                    const resState = serverResults[server.id];
-                    const isPending = !resState || resState.status === 'pending';
-                    const isSuccess = resState?.status === 'success';
-                    const isError = resState?.status === 'error';
-                    
-                    return (
-                      <tr key={server.id}>
-                        <td>
-                          <div style={{ fontWeight: 600 }}>{server.location}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                            {server.name} ({server.ip})
+        <div className="results-container">
+          <div className="results-table-wrapper">
+            <table className="results-table">
+              <thead>
+                <tr>
+                  <th>Location / Server</th>
+                  <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
+                  <th>Result Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DNS_SERVERS.map(server => {
+                  const resState = serverResults[server.id];
+                  const isIdle = !hasSearched;
+                  const isPending = hasSearched && (!resState || resState.status === 'pending');
+                  const isSuccess = hasSearched && resState?.status === 'success';
+                  const isError = hasSearched && resState?.status === 'error';
+                  
+                  return (
+                    <tr 
+                      key={server.id}
+                      onClick={() => setSelectedServerId(server.id)}
+                      onMouseEnter={() => setHoveredServerId(server.id)}
+                      onMouseLeave={() => setHoveredServerId(null)}
+                      style={{ 
+                        cursor: 'pointer', 
+                        backgroundColor: selectedServerId === server.id ? '#eff6ff' : (hoveredServerId === server.id ? '#f8fafc' : undefined),
+                        transition: 'background-color 0.2s'
+                      }}
+                    >
+                      <td>
+                        <div style={{ fontWeight: 600 }}>{server.location}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                          {server.name} ({server.ip})
+                        </div>
+                      </td>
+                      <td style={{ textAlign: 'center', fontSize: '1.25rem' }}>
+                        {isIdle && <span style={{ color: '#cbd5e1' }}>-</span>}
+                        {isPending && <i className="fi fi-rr-spinner" style={{ color: '#94a3b8', animation: 'spin 1s linear infinite', display: 'inline-block' }}></i>}
+                        {isSuccess && <i className="fi fi-sr-check-circle" style={{ color: 'var(--success)' }}></i>}
+                        {isError && <i className="fi fi-sr-cross-circle" style={{ color: 'var(--error)' }}></i>}
+                      </td>
+                      <td style={{ wordBreak: 'break-all' }}>
+                        {isIdle && (
+                          <div style={{ color: '#cbd5e1' }}>
+                            <i className={getRecordTypeIcon(recordType)} style={{ fontSize: '1.25rem' }}></i>
                           </div>
-                        </td>
-                        <td style={{ textAlign: 'center', fontSize: '1.25rem' }}>
-                          {isPending && <i className="fi fi-rr-spinner" style={{ color: '#94a3b8', animation: 'spin 1s linear infinite', display: 'inline-block' }}></i>}
-                          {isSuccess && <i className="fi fi-sr-check-circle" style={{ color: 'var(--success)' }}></i>}
-                          {isError && <i className="fi fi-sr-cross-circle" style={{ color: 'var(--error)' }}></i>}
-                        </td>
-                        <td style={{ wordBreak: 'break-all' }}>
-                          {isPending && <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Querying...</span>}
-                          {isSuccess && resState.result?.success && (
-                            <div>
-                              {resState.result.data.length === 0 ? (
-                                <span style={{ color: 'var(--text-muted)' }}>No records found</span>
-                              ) : (
-                                resState.result.data.map((r, i) => (
-                                  <div key={i}>{renderValue(r)}</div>
-                                ))
-                              )}
-                            </div>
-                          )}
-                          {isError && resState.result && !resState.result.success && (
-                            <span style={{ color: 'var(--error)', fontSize: '0.875rem' }}>
-                              {resState.result.error}
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        )}
+                        {isPending && <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Querying...</span>}
+                        {isSuccess && resState.result?.success && (
+                          <div>
+                            {resState.result.data.length === 0 ? (
+                              <span style={{ color: 'var(--text-muted)' }}>No records found</span>
+                            ) : (
+                              resState.result.data.map((r: any, i: number) => (
+                                <div key={i}>{renderValue(r)}</div>
+                              ))
+                            )}
+                          </div>
+                        )}
+                        {isError && resState.result && !resState.result.success && (
+                          <span style={{ color: 'var(--error)', fontSize: '0.875rem' }}>
+                            {resState.result.error}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-        )}
+          
+          <div className="map-wrapper">
+            <MapComponent 
+              servers={DNS_SERVERS} 
+              results={serverResults} 
+              selectedServerId={selectedServerId} 
+              hoveredServerId={hoveredServerId}
+            />
+          </div>
+        </div>
       </div>
     </main>
   );

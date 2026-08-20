@@ -164,10 +164,36 @@ select.input-field {
   cursor: not-allowed;
 }
 
-/* Results section */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  width: 100%;
+}
+
 .results-container {
   margin-top: 2rem;
   animation: fadeIn 0.4s ease-out;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .results-container {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.map-wrapper {
+  height: 600px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-sm);
+  background: #f1f5f9;
 }
 
 .error-message {
