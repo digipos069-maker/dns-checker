@@ -216,7 +216,7 @@ export default function Home() {
               <table className="results-table">
                 <thead>
                   <tr>
-                    <th>Location / Server</th>
+                    <th style={{ width: 'calc(50% - 2px)' }}>Location / Server</th>
                     <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
                     <th>Result Value</th>
                   </tr>
