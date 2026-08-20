@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { resolveDns, DnsRecordType, DnsResult } from '@/actions/dns';
 import Dropdown from '@/components/Dropdown';
+import AboutSection from '@/components/AboutSection';
 
 // Import map dynamically since Leaflet requires window
 const MapComponent = dynamic(() => import('@/components/Map'), { ssr: false });
@@ -331,6 +332,7 @@ export default function Home() {
         </div>
       </div>
       </div>
+      <AboutSection />
     </div>
   );
 }

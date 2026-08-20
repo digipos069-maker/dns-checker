@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="header-container">
             <div className="logo">
               <i className="fi fi-rr-globe"></i>
-              <span>DNS Propagation</span>
+              <span>DNS Checker</span>
             </div>
             <nav className="nav-links">
               <a href="#" className="active">Home</a>
