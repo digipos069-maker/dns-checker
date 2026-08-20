@@ -242,8 +242,11 @@ export default function Home() {
                       }}
                     >
                       <td>
-                        <div style={{ fontWeight: 600 }}>{server.location}</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '1.1rem' }}>{getFlagEmoji(server.id.split('-')[0])}</span>
+                          <span>{server.location}</span>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>
                           {server.name} ({server.ip})
                         </div>
                       </td>
