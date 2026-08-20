@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { resolveDns, DnsRecordType, DnsResult } from '@/actions/dns';
+import Dropdown from '@/components/Dropdown';
 
 const DNS_SERVERS = [
   { id: 'us-mv', name: 'Google', location: 'Mountain View CA, United States', ip: '8.8.8.8' },
@@ -146,27 +147,26 @@ export default function Home() {
             />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="type">Record Type</label>
-            <select
-              id="type"
-              className="input-field"
+          <div className="form-group" style={{ minWidth: '200px' }}>
+            <label>Record Type</label>
+            <Dropdown
               value={recordType}
-              onChange={(e) => setRecordType(e.target.value as DnsRecordType)}
-            >
-              <option value="A">A</option>
-              <option value="AAAA">AAAA</option>
-              <option value="MX">MX</option>
-              <option value="TXT">TXT</option>
-              <option value="CNAME">CNAME</option>
-              <option value="NS">NS</option>
-              <option value="PTR">PTR</option>
-              <option value="SRV">SRV</option>
-              <option value="SOA">SOA</option>
-              <option value="CAA">CAA</option>
-              <option value="DS">DS</option>
-              <option value="DNSKEY">DNSKEY</option>
-            </select>
+              onChange={setRecordType}
+              options={[
+                { label: 'A', value: 'A', description: 'IPv4 address' },
+                { label: 'AAAA', value: 'AAAA', description: 'IPv6 address' },
+                { label: 'MX', value: 'MX', description: 'Mail exchange' },
+                { label: 'TXT', value: 'TXT', description: 'Text records' },
+                { label: 'CNAME', value: 'CNAME', description: 'Canonical name' },
+                { label: 'NS', value: 'NS', description: 'Name servers' },
+                { label: 'PTR', value: 'PTR', description: 'Pointer record' },
+                { label: 'SRV', value: 'SRV', description: 'Service locator' },
+                { label: 'SOA', value: 'SOA', description: 'Start of authority' },
+                { label: 'CAA', value: 'CAA', description: 'Cert authority auth' },
+                { label: 'DS', value: 'DS', description: 'Delegation signer' },
+                { label: 'DNSKEY', value: 'DNSKEY', description: 'DNSSEC public key' },
+              ]}
+            />
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
@@ -200,10 +200,10 @@ export default function Home() {
                             {server.name} ({server.ip})
                           </div>
                         </td>
-                        <td style={{ textAlign: 'center' }}>
-                          {isPending && <span style={{ color: '#94a3b8' }}>⏳</span>}
-                          {isSuccess && <span style={{ color: 'var(--success)' }}>✅</span>}
-                          {isError && <span style={{ color: 'var(--error)' }}>❌</span>}
+                        <td style={{ textAlign: 'center', fontSize: '1.25rem' }}>
+                          {isPending && <i className="fi fi-rr-spinner" style={{ color: '#94a3b8', animation: 'spin 1s linear infinite', display: 'inline-block' }}></i>}
+                          {isSuccess && <i className="fi fi-sr-check-circle" style={{ color: 'var(--success)' }}></i>}
+                          {isError && <i className="fi fi-sr-cross-circle" style={{ color: 'var(--error)' }}></i>}
                         </td>
                         <td style={{ wordBreak: 'break-all' }}>
                           {isPending && <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Querying...</span>}
