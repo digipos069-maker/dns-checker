@@ -1,69 +1,238 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useState } from 'react';
+import { resolveDns, DnsRecordType, DnsResult } from '@/actions/dns';
+
+const DNS_SERVERS = [
+  { id: 'us-mv', name: 'Google', location: 'Mountain View CA, United States', ip: '8.8.8.8' },
+  { id: 'us-sf', name: 'OpenDNS', location: 'San Francisco CA, United States', ip: '208.67.222.222' },
+  { id: 'us-berkeley', name: 'Quad9', location: 'Berkeley, US', ip: '9.9.9.9' },
+  { id: 'us-cambridge', name: 'Akamai', location: 'Cambridge, United States', ip: '1.1.1.1' },
+  { id: 'us-ashburn', name: 'Quad9', location: 'Ashburn, United States', ip: '9.9.9.10' },
+  { id: 'us-centurylink', name: 'CenturyLink', location: 'United States', ip: '205.171.3.65' },
+  { id: 'us-wilmington', name: 'NextDNS Inc.', location: 'Wilmington, US', ip: '45.90.28.190' },
+  { id: 'ca-toronto', name: 'Cloudflare', location: 'Toronto, Canada', ip: '1.0.0.1' },
+  { id: 'ru-spb', name: 'PJSC MegaFon', location: 'Saint Petersburg, Russia', ip: '77.88.8.8' },
+  { id: 'za-cullinan', name: 'Liquid Telecom', location: 'Cullinan, South Africa', ip: '8.8.8.8' },
+  { id: 'nl-lelystad', name: 'LeaseWeb', location: 'Lelystad, Netherlands', ip: '1.1.1.1' },
+  { id: 'fr-strasbourg', name: 'Assoc Alsace', location: 'Strasbourg, France', ip: '8.8.4.4' },
+  { id: 'es-parla', name: 'AIRE NETWORKS', location: 'Parla, Spain', ip: '9.9.9.9' },
+  { id: 'ch-zurich', name: 'Swisscom Ltd', location: 'Zürich, Switzerland', ip: '1.1.1.1' },
+  { id: 'at-innsbruck', name: 'nemox.net', location: 'Innsbruck, Austria', ip: '8.8.8.8' },
+  { id: 'gb-newbury', name: 'Vodafone', location: 'Newbury, United Kingdom', ip: '208.67.220.220' },
+  { id: 'dk-copenhagen', name: 'Fiberby ApS', location: 'Copenhagen, Denmark', ip: '1.1.1.1' },
+  { id: 'de-frankfurt', name: 'Ecrcnet', location: 'Frankfurt, Germany', ip: '8.8.8.8' },
+  { id: 'mx-mexicocity', name: 'TOTAL PLAY', location: 'Mexico City, Mexico', ip: '9.9.9.9' },
+  { id: 'br-jacarezinho', name: 'Ligga Telecom', location: 'Jacarezinho, Brazil', ip: '1.1.1.1' },
+  { id: 'my-portdickson', name: 'Bigband Sdn Bhd', location: 'Port Dickson, Malaysia', ip: '8.8.8.8' },
+  { id: 'au-research', name: 'Cloudflare', location: 'Research, Australia', ip: '1.1.1.1' },
+  { id: 'au-brisbane', name: 'Cloudflare', location: 'Brisbane, Australia', ip: '1.0.0.1' },
+  { id: 'nz-auckland', name: 'Voyager Internet', location: 'Auckland, New Zealand', ip: '8.8.8.8' },
+  { id: 'sg-singapore', name: 'DigitalOcean', location: 'Singapore', ip: '1.1.1.1' },
+  { id: 'kr-seoul', name: 'SK Telecom', location: 'Seoul, South Korea', ip: '8.8.4.4' },
+  { id: 'cn-xinfeng', name: 'Nanjing Xinfeng', location: 'Xinfeng, China', ip: '223.5.5.5' },
+  { id: 'tr-istanbul', name: 'Radore Veri Merkezi', location: 'Istanbul, Turkey', ip: '8.8.8.8' },
+  { id: 'in-bengaluru', name: 'BHARAT PUBLIC DNS', location: 'Bengaluru, India', ip: '1.10.10.10' },
+  { id: 'pk-karachi', name: 'Connect Comms', location: 'Karachi, Pakistan', ip: '1.1.1.1' },
+  { id: 'pt-lisbon', name: 'NOS COMUNICACOES', location: 'Lisbon, Portugal', ip: '8.8.8.8' },
+  { id: 'ie-ireland', name: 'Daniel Cid', location: 'Ireland', ip: '9.9.9.9' },
+  { id: 'bd-dhaka', name: 'Dhaka', location: 'Dhaka, Bangladesh', ip: '8.8.4.4' }
+];
+
+type ServerResult = {
+  status: 'pending' | 'success' | 'error';
+  result?: DnsResult;
+};
 
 export default function Home() {
+  const [domain, setDomain] = useState('');
+  const [recordType, setRecordType] = useState<DnsRecordType>('A');
+  const [loading, setLoading] = useState(false);
+  const [serverResults, setServerResults] = useState<Record<string, ServerResult>>({});
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!domain) return;
+    
+    setLoading(true);
+    setHasSearched(true);
+    
+    // Initialize results state for all servers to 'pending'
+    const initialResults: Record<string, ServerResult> = {};
+    DNS_SERVERS.forEach(server => {
+      initialResults[server.id] = { status: 'pending' };
+    });
+    setServerResults(initialResults);
+    
+    const cleanDomain = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim();
+    
+    // Fire concurrent requests
+    await Promise.all(
+      DNS_SERVERS.map(async (server) => {
+        try {
+          const res = await resolveDns(cleanDomain, recordType, server.ip);
+          setServerResults(prev => ({
+            ...prev,
+            [server.id]: { status: res.success ? 'success' : 'error', result: res }
+          }));
+        } catch (err) {
+          setServerResults(prev => ({
+            ...prev,
+            [server.id]: { status: 'error', result: { success: false, error: 'Failed' } }
+          }));
+        }
+      })
+    );
+
+    setLoading(false);
+  };
+
+  const renderValue = (val: any) => {
+    if (typeof val === 'string') return val;
+    if (Array.isArray(val)) return val.join(' ');
+    if (typeof val === 'object' && val !== null) {
+      // MX
+      if ('exchange' in val && 'priority' in val) {
+        return `Priority: ${val.priority}, Exchange: ${val.exchange}`;
+      }
+      // SRV
+      if ('weight' in val && 'port' in val && 'name' in val) {
+        return `Priority: ${val.priority}, Weight: ${val.weight}, Port: ${val.port}, Target: ${val.name}`;
+      }
+      // SOA
+      if ('nsname' in val && 'hostmaster' in val) {
+        return `NS: ${val.nsname}, Hostmaster: ${val.hostmaster}, Serial: ${val.serial}`;
+      }
+      // CAA (node:dns returns { critical, issue|issuewild|iodef })
+      if ('critical' in val) {
+        const tag = 'issue' in val ? 'issue' : 'issuewild' in val ? 'issuewild' : 'iodef';
+        return `Flag: ${val.critical}, Tag: ${tag}, Value: ${val[tag]}`;
+      }
+      
+      // dns-packet formats (DS, DNSKEY) might contain buffers
+      const clone = { ...val };
+      for (const k in clone) {
+        if (clone[k] && clone[k].type === 'Buffer' && Array.isArray(clone[k].data)) {
+          clone[k] = Buffer.from(clone[k].data).toString('hex');
+        } else if (Buffer.isBuffer(clone[k])) {
+          clone[k] = clone[k].toString('hex');
+        }
+      }
+      return JSON.stringify(clone);
+    }
+    return String(val);
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <main className="container">
+      <div className="header">
+        <h1>DNS Checker</h1>
+        <p>Instantly check DNS records across the globe.</p>
+      </div>
+
+      <div className="glass-card">
+        <form className="search-form" onSubmit={handleSubmit}>
+          <div className="form-group" style={{ flex: 2 }}>
+            <label htmlFor="domain">Domain Name</label>
+            <input
+              id="domain"
+              type="text"
+              placeholder="e.g. google.com"
+              className="input-field"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+              required
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="type">Record Type</label>
+            <select
+              id="type"
+              className="input-field"
+              value={recordType}
+              onChange={(e) => setRecordType(e.target.value as DnsRecordType)}
+            >
+              <option value="A">A</option>
+              <option value="AAAA">AAAA</option>
+              <option value="MX">MX</option>
+              <option value="TXT">TXT</option>
+              <option value="CNAME">CNAME</option>
+              <option value="NS">NS</option>
+              <option value="PTR">PTR</option>
+              <option value="SRV">SRV</option>
+              <option value="SOA">SOA</option>
+              <option value="CAA">CAA</option>
+              <option value="DS">DS</option>
+              <option value="DNSKEY">DNSKEY</option>
+            </select>
+          </div>
+
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? <span className="loader"></span> : 'Search'}
+          </button>
+        </form>
+
+        {hasSearched && (
+          <div className="results-container">
+            <div className="results-table-wrapper">
+              <table className="results-table">
+                <thead>
+                  <tr>
+                    <th>Location / Server</th>
+                    <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
+                    <th>Result Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {DNS_SERVERS.map(server => {
+                    const resState = serverResults[server.id];
+                    const isPending = !resState || resState.status === 'pending';
+                    const isSuccess = resState?.status === 'success';
+                    const isError = resState?.status === 'error';
+                    
+                    return (
+                      <tr key={server.id}>
+                        <td>
+                          <div style={{ fontWeight: 600 }}>{server.location}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            {server.name} ({server.ip})
+                          </div>
+                        </td>
+                        <td style={{ textAlign: 'center' }}>
+                          {isPending && <span style={{ color: '#94a3b8' }}>⏳</span>}
+                          {isSuccess && <span style={{ color: 'var(--success)' }}>✅</span>}
+                          {isError && <span style={{ color: 'var(--error)' }}>❌</span>}
+                        </td>
+                        <td style={{ wordBreak: 'break-all' }}>
+                          {isPending && <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Querying...</span>}
+                          {isSuccess && resState.result?.success && (
+                            <div>
+                              {resState.result.data.length === 0 ? (
+                                <span style={{ color: 'var(--text-muted)' }}>No records found</span>
+                              ) : (
+                                resState.result.data.map((r, i) => (
+                                  <div key={i}>{renderValue(r)}</div>
+                                ))
+                              )}
+                            </div>
+                          )}
+                          {isError && resState.result && !resState.result.success && (
+                            <span style={{ color: 'var(--error)', fontSize: '0.875rem' }}>
+                              {resState.result.error}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
