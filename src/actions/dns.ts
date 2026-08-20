@@ -2,7 +2,6 @@
 
 import dns from 'node:dns/promises';
 import dgram from 'node:dgram';
-// @ts-ignore
 import dnsPacket from 'dns-packet';
 
 export type DnsRecordType = 'A' | 'AAAA' | 'MX' | 'TXT' | 'CNAME' | 'NS' | 'PTR' | 'SRV' | 'SOA' | 'CAA' | 'DS' | 'DNSKEY';
