@@ -160,10 +160,10 @@ export default function Home() {
   };
 
   return (
-    <main className="container">
-      <div className="header">
-        <h1>DNS Checker</h1>
-        <p>Instantly check DNS records across the globe.</p>
+    <div className="container">
+      <div className="page-hero">
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Global DNS Checker</h1>
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Instantly check DNS records across the globe.</p>
       </div>
 
       <div className="glass-card">
@@ -331,6 +331,6 @@ export default function Home() {
         </div>
       </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -39,31 +39,99 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
-  width: 100%;
+  padding: 2rem;
 }
 
-.header {
+.page-hero {
   text-align: center;
-  margin-bottom: 3rem;
-  animation: fadeInDown 0.6s ease-out;
+  margin-bottom: 2rem;
 }
 
-.header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  background: linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0.5rem;
+/* Header & Footer Styles */
+.global-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-.header p {
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.logo i {
+  font-size: 1.75rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
   color: var(--text-muted);
-  font-size: 1.125rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: var(--primary);
+}
+
+.main-content {
+  min-height: calc(100vh - 160px);
+}
+
+.global-footer {
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  padding: 2rem 0;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
 }
 
 .glass-card {
