@@ -2,6 +2,7 @@
 
 import dns from 'node:dns/promises';
 import dgram from 'node:dgram';
+// @ts-ignore
 import dnsPacket from 'dns-packet';
 
 export type DnsRecordType = 'A' | 'AAAA' | 'MX' | 'TXT' | 'CNAME' | 'NS' | 'PTR' | 'SRV' | 'SOA' | 'CAA' | 'DS' | 'DNSKEY';
@@ -73,7 +74,7 @@ export async function resolveDns(domain: string, type: DnsRecordType, serverIp?:
       }
       records = await queryDnsPacket(domain, type, serverIp);
     } else {
-      let resolver = dns;
+      let resolver: any = dns;
       
       // Node's dns module doesn't auto-reverse IPs for PTR for resolvePtr, so we do it
       let queryDomain = domain;

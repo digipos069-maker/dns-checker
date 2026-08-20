@@ -158,58 +158,61 @@ export default function Home() {
       </div>
 
       <div className="glass-card">
-        <form className="search-form" onSubmit={handleSubmit}>
-          <div className="form-group" style={{ flex: 2 }}>
-            <label htmlFor="domain">Domain Name</label>
-            <input
-              id="domain"
-              type="text"
-              placeholder="e.g. google.com"
-              className="input-field"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
-              required
-            />
-          </div>
-          
-          <div className="form-group" style={{ minWidth: '200px' }}>
-            <label>Record Type</label>
-            <Dropdown
-              value={recordType}
-              onChange={setRecordType}
-              options={[
-                { label: 'A', value: 'A', description: 'IPv4 address' },
-                { label: 'AAAA', value: 'AAAA', description: 'IPv6 address' },
-                { label: 'MX', value: 'MX', description: 'Mail exchange' },
-                { label: 'TXT', value: 'TXT', description: 'Text records' },
-                { label: 'CNAME', value: 'CNAME', description: 'Canonical name' },
-                { label: 'NS', value: 'NS', description: 'Name servers' },
-                { label: 'PTR', value: 'PTR', description: 'Pointer record' },
-                { label: 'SRV', value: 'SRV', description: 'Service locator' },
-                { label: 'SOA', value: 'SOA', description: 'Start of authority' },
-                { label: 'CAA', value: 'CAA', description: 'Cert authority auth' },
-                { label: 'DS', value: 'DS', description: 'Delegation signer' },
-                { label: 'DNSKEY', value: 'DNSKEY', description: 'DNSSEC public key' },
-              ]}
-            />
-          </div>
-
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? <span className="loader"></span> : 'Search'}
-          </button>
-        </form>
-
         <div className="results-container">
-          <div className="results-table-wrapper">
-            <table className="results-table">
-              <thead>
-                <tr>
-                  <th>Location / Server</th>
-                  <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
-                  <th>Result Value</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="left-column">
+            <form className="search-form" onSubmit={handleSubmit} style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
+                <label htmlFor="domain">Domain Name</label>
+                <input
+                  id="domain"
+                  type="text"
+                  placeholder="e.g. google.com"
+                  className="input-field"
+                  value={domain}
+                  onChange={(e) => setDomain(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="form-group" style={{ minWidth: '150px' }}>
+                <label>Record Type</label>
+                <Dropdown
+                  value={recordType}
+                  onChange={setRecordType}
+                  options={[
+                    { label: 'A', value: 'A', description: 'IPv4 address' },
+                    { label: 'AAAA', value: 'AAAA', description: 'IPv6 address' },
+                    { label: 'MX', value: 'MX', description: 'Mail exchange' },
+                    { label: 'TXT', value: 'TXT', description: 'Text records' },
+                    { label: 'CNAME', value: 'CNAME', description: 'Canonical name' },
+                    { label: 'NS', value: 'NS', description: 'Name servers' },
+                    { label: 'PTR', value: 'PTR', description: 'Pointer record' },
+                    { label: 'SRV', value: 'SRV', description: 'Service locator' },
+                    { label: 'SOA', value: 'SOA', description: 'Start of authority' },
+                    { label: 'CAA', value: 'CAA', description: 'Cert authority auth' },
+                    { label: 'DS', value: 'DS', description: 'Delegation signer' },
+                    { label: 'DNSKEY', value: 'DNSKEY', description: 'DNSSEC public key' },
+                  ]}
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <button type="submit" className="btn-primary" disabled={loading} style={{ height: '42px', padding: '0 1.5rem' }}>
+                  {loading ? <span className="loader"></span> : 'Search'}
+                </button>
+              </div>
+            </form>
+
+            <div className="results-table-wrapper">
+              <table className="results-table">
+                <thead>
+                  <tr>
+                    <th>Location / Server</th>
+                    <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
+                    <th>Result Value</th>
+                  </tr>
+                </thead>
+                <tbody>
                 {DNS_SERVERS.map(server => {
                   const resState = serverResults[server.id];
                   const isIdle = !hasSearched;
@@ -271,8 +274,9 @@ export default function Home() {
               </tbody>
             </table>
           </div>
-          
-          <div className="map-wrapper">
+        </div>
+        
+        <div className="map-wrapper">
             <MapComponent 
               servers={DNS_SERVERS} 
               results={serverResults} 
