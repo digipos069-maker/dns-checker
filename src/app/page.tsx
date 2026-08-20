@@ -162,8 +162,8 @@ export default function Home() {
   return (
     <div className="container">
       <div className="page-hero">
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Global DNS Checker</h1>
-        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Instantly check DNS records across the globe.</p>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Global DNS Propagation Checker</h1>
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Instantly check DNS propagation and records across the globe.</p>
       </div>
 
       <div className="glass-card">

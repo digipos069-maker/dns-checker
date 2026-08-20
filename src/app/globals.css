@@ -79,6 +79,15 @@ body {
 
 .logo i {
   font-size: 1.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.logo span {
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .nav-links {
