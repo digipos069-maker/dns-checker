@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -18,14 +19,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="global-header">
           <div className="header-container">
-            <div className="logo">
+            <Link href="/" className="logo" style={{ textDecoration: 'none' }}>
               <i className="fi fi-rr-globe"></i>
               <span>DNS Checker</span>
-            </div>
+            </Link>
             <nav className="nav-links">
-              <a href="#" className="active">Home</a>
-              <a href="#">Tools</a>
-              <a href="#">About</a>
+              <Link href="/" className="active">Home</Link>
+              <Link href="/ip-location">Tools</Link>
+              <Link href="/about">About</Link>
             </nav>
           </div>
         </header>
@@ -38,8 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="footer-container">
             <p>&copy; {new Date().getFullYear()} DNS Checker. All rights reserved.</p>
             <div className="footer-links">
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
               <a href="#">Contact</a>
             </div>
           </div>
