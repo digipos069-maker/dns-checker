@@ -63,6 +63,15 @@ const getRecordTypeIcon = (type: string) => {
   }
 };
 
+const getFlagEmoji = (countryCode: string) => {
+  if (!countryCode) return '';
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+};
+
 type ServerResult = {
   status: 'pending' | 'success' | 'error';
   result?: DnsResult;
@@ -276,7 +285,8 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="map-wrapper">
+        <div className="right-column">
+          <div className="map-wrapper">
             <MapComponent 
               servers={DNS_SERVERS} 
               results={serverResults} 
@@ -284,7 +294,39 @@ export default function Home() {
               hoveredServerId={hoveredServerId}
             />
           </div>
+
+          <div className="summary-list">
+            <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>DNS Servers</h3>
+            <div className="summary-list-content">
+              {(() => {
+                const uniqueCountries = new Map();
+                DNS_SERVERS.forEach(server => {
+                  const countryName = server.location.split(',').pop()?.trim();
+                  if (countryName) {
+                    if (!uniqueCountries.has(countryName)) {
+                      uniqueCountries.set(countryName, { countryCode: server.id.split('-')[0] });
+                    }
+                  }
+                });
+
+                return Array.from(uniqueCountries.entries()).map(([countryName, { countryCode }]) => {
+                  const flag = getFlagEmoji(countryCode);
+                  
+                  return (
+                    <div 
+                      key={countryName} 
+                      className="summary-item" 
+                    >
+                      <span className="summary-flag">{flag}</span>
+                      <span className="summary-name" title={countryName}>{countryName}</span>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </main>
   );
