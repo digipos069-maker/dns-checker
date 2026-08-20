@@ -3,6 +3,7 @@
 import dns from 'node:dns/promises';
 import dgram from 'node:dgram';
 import dnsPacket from 'dns-packet';
+import geoip from 'geoip-lite';
 
 export type DnsRecordType = 'A' | 'AAAA' | 'MX' | 'TXT' | 'CNAME' | 'NS' | 'PTR' | 'SRV' | 'SOA' | 'CAA' | 'DS' | 'DNSKEY';
 

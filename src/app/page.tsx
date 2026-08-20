@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { resolveDns, DnsRecordType, DnsResult } from '@/actions/dns';
 import Dropdown from '@/components/Dropdown';
@@ -125,8 +126,22 @@ export default function Home() {
   };
 
   const renderValue = (val: any) => {
-    if (typeof val === 'string') return val;
-    if (Array.isArray(val)) return val.join(' ');
+    if (typeof val === 'string') {
+      if (recordType === 'A' || recordType === 'AAAA') {
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <span>{val}</span>
+            <Link href={`/ip-location?ip=${val}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', textDecoration: 'none', background: '#eff6ff', width: '24px', height: '24px', borderRadius: '50%', fontSize: '0.85em' }} title="Locate IP">
+              <i className="fi fi-rr-marker" style={{ marginTop: '2px' }}></i>
+            </Link>
+          </div>
+        );
+      }
+      return val;
+    }
+    if (Array.isArray(val)) {
+      return val.join(' ');
+    }
     if (typeof val === 'object' && val !== null) {
       // MX
       if ('exchange' in val && 'priority' in val) {
