@@ -129,7 +129,7 @@ export default function Home() {
     if (typeof val === 'string') {
       if (recordType === 'A' || recordType === 'AAAA') {
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span>{val}</span>
             <Link href={`/ip-location?ip=${val}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', textDecoration: 'none', background: '#eff6ff', width: '24px', height: '24px', borderRadius: '50%', fontSize: '0.85em' }} title="Locate IP">
               <i className="fi fi-rr-marker" style={{ marginTop: '2px' }}></i>
@@ -176,7 +176,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ maxWidth: '1415px' }}>
       <div className="page-hero">
         <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Global DNS Propagation Checker</h1>
         <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Instantly check DNS propagation and records across the globe.</p>
@@ -232,8 +232,8 @@ export default function Home() {
               <table className="results-table">
                 <thead>
                   <tr>
-                    <th style={{ width: 'calc(50% - 2px)' }}>Location / Server</th>
-                    <th style={{ width: '80px', textAlign: 'center' }}>Status</th>
+                    <th style={{ width: 'calc(50% - 6px)' }}>Location / Server</th>
+                    <th style={{ width: '80px', textAlign: 'center', padding: 0 }}>Status</th>
                     <th>Result Value</th>
                   </tr>
                 </thead>
@@ -266,7 +266,7 @@ export default function Home() {
                           {server.name} ({server.ip})
                         </div>
                       </td>
-                      <td style={{ textAlign: 'center', fontSize: '1.25rem' }}>
+                      <td style={{ textAlign: 'center', fontSize: '1.25rem', padding: 0 }}>
                         {isIdle && <span style={{ color: '#cbd5e1' }}>-</span>}
                         {isPending && <i className="fi fi-rr-spinner" style={{ color: '#94a3b8', animation: 'spin 1s linear infinite', display: 'inline-block' }}></i>}
                         {isSuccess && <i className="fi fi-sr-check-circle" style={{ color: 'var(--success)' }}></i>}

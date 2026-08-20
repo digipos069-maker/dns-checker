@@ -611,7 +611,7 @@ select.input-field {
 
 @media (min-width: 1024px) {
   .results-container {
-    grid-template-columns: 1fr 1.5fr;
+    grid-template-columns: calc(40% + 15px) 1fr;
     align-items: start;
   }
 }
