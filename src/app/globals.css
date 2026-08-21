@@ -1,17 +1,16 @@
-@import url('https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css');
 
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
   --card-bg: rgba(255, 255, 255, 0.7);
   --card-border: rgba(255, 255, 255, 0.5);
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --ring: rgba(59, 130, 246, 0.3);
-  --error: #ef4444;
+  --primary: #1d4ed8;
+  --primary-hover: #1e40af;
+  --ring: rgba(29, 78, 216, 0.3);
+  --error: #dc2626;
   --error-bg: #fef2f2;
-  --success: #10b981;
-  --text-muted: #64748b;
+  --success: #059669;
+  --text-muted: #475569;
   --radius: 16px;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -287,7 +286,7 @@ body {
 }
 
 .info-block p {
-  color: #3b82f6;
+  color: #1d4ed8;
   font-size: 0.95rem;
 }
 

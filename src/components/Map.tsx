@@ -16,17 +16,17 @@ const iconOptions = {
 
 const successIcon = new L.Icon({
   ...iconOptions,
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png',
 });
 
 const errorIcon = new L.Icon({
   ...iconOptions,
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-red.png',
 });
 
 const pendingIcon = new L.Icon({
   ...iconOptions,
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+  iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-grey.png',
 });
 
 function MapInteraction({ selectedServerId, hoveredServerId, servers, markerRefs }: { selectedServerId: string | null, hoveredServerId: string | null, servers: any[], markerRefs: React.MutableRefObject<Record<string, L.Marker>> }) {
@@ -85,7 +85,7 @@ export default function Map({ servers, results, selectedServerId, hoveredServerI
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
       />
       <MapInteraction selectedServerId={selectedServerId} hoveredServerId={hoveredServerId} servers={servers} markerRefs={markerRefs} />
       {servers.map((server) => {

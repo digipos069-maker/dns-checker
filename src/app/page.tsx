@@ -315,7 +315,7 @@ export default function Home() {
           </div>
 
           <div className="summary-list">
-            <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>DNS Servers</h3>
+            <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>DNS Servers</h2>
             <div className="summary-list-content">
               {(() => {
                 const uniqueCountries = new Map();
