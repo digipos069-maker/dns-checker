@@ -178,8 +178,8 @@ export default function Home() {
   return (
     <div className="container" style={{ maxWidth: '1415px' }}>
       <div className="page-hero">
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Global DNS Propagation Checker</h1>
-        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Instantly check DNS propagation and records across the globe.</p>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>DNS Lookup Tool</h1>
+        <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Perform a domain DNS lookup, online DNS lookup, and check DNS propagation across the globe with our fast DNS record lookup tool.</p>
       </div>
 
       <div className="glass-card">

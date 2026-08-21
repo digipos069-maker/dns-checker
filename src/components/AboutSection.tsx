@@ -30,13 +30,13 @@ export default function AboutSection() {
   return (
     <section className="about-section glass-card">
       <div className="about-header text-center">
-        <h2>DNS Propagation Checker</h2>
-        <p className="subtitle">How to Check DNS Propagation Globally?</p>
+        <h2>Free DNS Checker & Propagation Tool</h2>
+        <p className="subtitle">How to check domain DNS records globally?</p>
       </div>
       
       <div className="about-intro">
-        <p>Perform a quick DNS propagation lookup for any domain. Our DNS Propagation Test tool features a comprehensive list of 100+ global DNS servers, which makes global DNS checks more effortless than ever. It is designed to collect, parse, and display all the DNS propagation results on the map, going beyond text-based propagation reports.</p>
-        <p>It visually represents how your DNS changes are propagated across different DNS servers in different regions globally. This enhances your understanding and makes identifying any regional variations or issues easier. Now monitor and manage your DNS records effectively.</p>
+        <p>Use our <strong>free dns checker</strong> to perform a quick DNS propagation lookup for any domain. Whether you need an <strong>online dns lookup</strong>, a <strong>dns record checker</strong>, or an advanced <strong>dns check tool</strong>, our platform features a comprehensive list of 100+ global servers. It is the ultimate <strong>dns propagation checker</strong> to collect, parse, and display results seamlessly.</p>
+        <p>Visually track how your DNS changes propagate across different regions. Use our reliable <strong>online dns checker</strong> to <strong>check dns records</strong> effortlessly, identifying any regional delays instantly. Monitor and manage your network with the best <strong>dns lookup tool</strong> available.</p>
       </div>
 
       <div className="about-block">

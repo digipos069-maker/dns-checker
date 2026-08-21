@@ -9,13 +9,55 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "DNS Checker | Online Tool",
-  description: "Check DNS records (A, AAAA, MX, TXT, CNAME, NS) for any domain easily and quickly.",
+  metadataBase: new URL('https://dnschecker.store'),
+  title: {
+    default: 'DNS Checker | Global DNS Propagation & Records Tool',
+    template: '%s | DNS Checker'
+  },
+  description: 'Instantly check DNS propagation, verify A, AAAA, MX, TXT, CNAME records, and locate IPs globally with our powerful DNS checker tool.',
+  keywords: ['dns check', 'dns checker', 'dns lookup', 'dns lookup tool', 'dns check tool', 'online dns checker', 'online dns lookup', 'dns record checker', 'dns record lookup', 'check dns records', 'free dns checker', 'free dns lookup', 'dns propagation checker', 'domain dns lookup', 'check domain dns records', 'IP location', 'A record', 'MX record', 'NS record', 'dnschecker.store'],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://dnschecker.store',
+    title: 'DNS Checker | Global DNS Propagation & Records Tool',
+    description: 'Instantly check DNS propagation, verify records, and locate IPs globally.',
+    siteName: 'DNS Checker',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DNS Checker | Global DNS Propagation',
+    description: 'Instantly check DNS propagation, verify records, and locate IPs globally.',
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${outfit.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "DNS Checker",
+              "url": "https://dnschecker.store",
+              "description": "Instantly check DNS propagation, verify A, AAAA, MX, TXT, CNAME records, and locate IPs globally.",
+              "applicationCategory": "UtilitiesApplication",
+              "operatingSystem": "All",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              }
+            })
+          }}
+        />
+      </head>
       <body>
         <header className="global-header">
           <div className="header-container">
